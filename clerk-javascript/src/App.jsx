@@ -9,13 +9,13 @@ import Header from "./components/Header";
 
 export default function App() {
   return (
-    <Header>
+    <header>
       <SignedOut>
         <SignInButton />
       </SignedOut>
       <SignedIn>
         <UserButton />
       </SignedIn>
-    </Header>
+    </header>
   );
 }

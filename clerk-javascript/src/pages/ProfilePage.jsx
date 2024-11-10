@@ -66,43 +66,47 @@ export default function ProfilePage() {
 
       {!isEditing ? (
         <div className="profile-info">
-          {profileData.age && (
-            <p>
-              <strong>Age:</strong> {profileData.age}
-            </p>
-          )}
-          {profileData.weight && (
-            <p>
-              <strong>Weight:</strong> {profileData.weight}
-            </p>
-          )}
-          {profileData.size && (
-            <p>
-              <strong>Size:</strong> {profileData.size}
-            </p>
-          )}
-          {profileData.dietaryNeeds && (
-            <p>
-              <strong>Dietary Needs:</strong> {profileData.dietaryNeeds}
-            </p>
-          )}
-          {profileData.medicalConditions && (
-            <p>
-              <strong>Medical Conditions:</strong>{" "}
-              {profileData.medicalConditions}
-            </p>
-          )}
-          {profileData.vaccinationStatus && (
-            <p>
-              <strong>Vaccination Status:</strong>{" "}
-              {profileData.vaccinationStatus}
-            </p>
-          )}
-          {profileData.spayedNeutered && (
-            <p>
-              <strong>Spayed/Neutered:</strong> {profileData.spayedNeutered}
-            </p>
-          )}
+          <div className="info-column">
+            {profileData.age && (
+              <p>
+                <strong>Age:</strong> {profileData.age}
+              </p>
+            )}
+            {profileData.weight && (
+              <p>
+                <strong>Weight:</strong> {profileData.weight}
+              </p>
+            )}
+            {profileData.size && (
+              <p>
+                <strong>Size:</strong> {profileData.size}
+              </p>
+            )}
+          </div>
+          <div className="info-column">
+            {profileData.dietaryNeeds && (
+              <p>
+                <strong>Dietary Needs:</strong> {profileData.dietaryNeeds}
+              </p>
+            )}
+            {profileData.medicalConditions && (
+              <p>
+                <strong>Medical Conditions:</strong>{" "}
+                {profileData.medicalConditions}
+              </p>
+            )}
+            {profileData.vaccinationStatus && (
+              <p>
+                <strong>Vaccination Status:</strong>{" "}
+                {profileData.vaccinationStatus}
+              </p>
+            )}
+            {profileData.spayedNeutered && (
+              <p>
+                <strong>Spayed/Neutered:</strong> {profileData.spayedNeutered}
+              </p>
+            )}
+          </div>
           <button onClick={handleEdit}>Edit Profile</button>
         </div>
       ) : (

@@ -11,8 +11,8 @@ const App = () => {
     const [userInput, setUserInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const PUBLISHABLE_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-    const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY;
+    const PUBLISHABLE_KEY = import.meta.env.GEMINI_API_KEY;
+    const CAT_API_KEY = import.meta.env.CAT_API_KEY;
 
     // Initialize Gemini AI API
     const genAI = new GoogleGenerativeAI({ apiKey: PUBLISHABLE_KEY });

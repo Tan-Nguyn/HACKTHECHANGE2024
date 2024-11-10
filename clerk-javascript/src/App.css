@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+.profile-info, .edit-form {
+  margin-top: 2rem;
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.edit-form h2 {
+  text-align: center;
+}
+
+.edit-form label {
+  display: block;
+  margin-top: 1rem;
+}
+
+.edit-form input, .edit-form select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.edit-form button {
+  margin-right: 1rem;
+}

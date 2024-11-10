@@ -4,8 +4,8 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/clerk-react";
-
-import Header from "./components/Header";
+// import Header from "./components/Header";
+import { BasicInfo, HealthInfo } from "./pages/EditProfile";
 
 export default function App() {
   return (
@@ -15,6 +15,8 @@ export default function App() {
       </SignedOut>
       <SignedIn>
         <UserButton />
+        <BasicInfo />
+        <HealthInfo />
       </SignedIn>
     </header>
   );

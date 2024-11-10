@@ -29,7 +29,6 @@ const DailyWork = () => {
 
   // Handle task completion and experience progression
   const handleCheckboxChange = (taskId) => {
-    // Mark the task as completed for today
     if (!taskCompletion[taskId]) {
       setTaskCompletion((prevCompletion) => ({
         ...prevCompletion,

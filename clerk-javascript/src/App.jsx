@@ -9,15 +9,15 @@
 // import ChatBot from "./pages/ChatBot";
 // import ProfilePage from "./pages/ProfilePage";
 // import DailyWork from "./pages/DailyWork";
-// // import {
-// //   BrowserRouter as BrowserRouter,
-// //   Routes,
-// //   Route,
-// // } from "react-router-dom";
+// import {
+//   BrowserRouter as BrowserRouter,
+//   Routes,
+//   Route,
+// } from "react-router-dom";
 
-// // import Header from "./components/Header";
-// // import Profile from "./pages/Profile";
-// // import Home from "./pages/Home";
+// import Header from "./components/Header";
+// import Profile from "./pages/Profile";
+// import Home from "./pages/Home";
 
 // export default function App() {
 //   // Import your publishable key
@@ -60,37 +60,24 @@
 //   );
 // }
 
-import {
-  BrowserRouter as BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
-import ProfilePage from "./pages/ProfilePage";
 import Home from "./pages/Home";
+import ProfilePage from "./pages/ProfilePage";
 import ChatBot from "./pages/ChatBot";
 import DailyWork from "./pages/DailyWork";
 
 export default function App() {
-  // Import your publishable key
-  const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
-  if (!PUBLISHABLE_KEY) {
-    throw new Error("Missing Publishable Key");
-  }
-
   return (
-    <>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/chatbot" element={<ChatBot />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/dailywork" element={<DailyWork />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/chatbot" element={<ChatBot />} />
+        <Route path="/dailywork" element={<DailyWork />} />
+      </Routes>
+    </Router>
   );
 }

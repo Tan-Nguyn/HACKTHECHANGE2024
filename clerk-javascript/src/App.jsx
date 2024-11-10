@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -30,6 +31,41 @@ function App() {
       </p>
     </>
   )
+=======
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import ChatBot from './pages/ChatBot';
+
+
+export default function App() {
+
+  return (
+    <Router>
+      <>
+        <header>
+          <Routes>
+            <Route path='/' element={<div>Home</div>} />
+            <Route path='/chatbot' element={<ChatBot />} />
+          </Routes>
+
+
+          <SignedIn>
+            <UserButton />
+            <Link to="/chatbot">
+              <button>Go to ChatBot</button>
+            </Link>
+          </SignedIn>
+
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+
+        </header>
+      </>
+    </Router>
+
+  );
+>>>>>>> Stashed changes
 }
 
 export default App

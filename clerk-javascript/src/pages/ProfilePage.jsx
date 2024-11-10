@@ -18,9 +18,8 @@ export default function ProfilePage() {
 
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
-  // Calculate completion percentage
   useEffect(() => {
-    const totalFields = Object.keys(profileData).length - 1; // Exclude avatar
+    const totalFields = Object.keys(profileData).length - 1;
     const filledFields = Object.values(profileData).filter(Boolean).length;
     setCompletionPercentage(Math.round((filledFields / totalFields) * 100));
   }, [profileData]);
@@ -32,6 +31,9 @@ export default function ProfilePage() {
   const handleSave = (newData) => {
     setProfileData(newData);
     setIsEditing(false);
+
+    // Save to localStorage instead of downloading
+    localStorage.setItem("userProfile", JSON.stringify(newData));
   };
 
   const handleCancel = () => {

@@ -8,7 +8,7 @@ import {
 } from "@clerk/clerk-react";
 import ChatBot from "./pages/ChatBot";
 import ProfilePage from "./pages/ProfilePage";
-// import DailyWork from "./pages/DailyWork";
+import DailyWork from "./pages/DailyWork";
 
 export default function App() {
   // Import your publishable key
@@ -26,7 +26,7 @@ export default function App() {
             <Route path="/" element={<div>Home</div>} />
             <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/profile" element={<ProfilePage />} />
-            {/* <Route path="/dailywork" element={<DailyWork />} /> */}
+            <Route path="/dailywork" element={<DailyWork />} />
           </Routes>
 
           <SignedIn>
@@ -37,9 +37,9 @@ export default function App() {
             <Link to="/profile">
               <button>Go to Profile</button>
             </Link>
-            {/* <Link to="/dailywork">
+            <Link to="/dailywork">
               <button>Daily Work</button>
-            </Link> */}
+            </Link>
           </SignedIn>
 
           <SignedOut>

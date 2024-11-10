@@ -1,23 +1,41 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
-// import Header from "./components/Header";
-import { BasicInfo, HealthInfo } from "./pages/EditProfile";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { SignedIn, SignedOut, SignInButton, UserButton, ClerkProvider } from '@clerk/clerk-react';
+import ChatBot from './pages/ChatBot';
+
 
 export default function App() {
+
+
+  // Import your publishable key
+  const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+  if (!PUBLISHABLE_KEY) {
+    throw new Error("Missing Publishable Key");
+  }
+
   return (
-    <header>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-        <BasicInfo />
-        <HealthInfo />
-      </SignedIn>
-    </header>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <Router>
+        <header>
+          <Routes>
+            <Route path='/' element={<div>Home</div>} />
+            <Route path='/chatbot' element={<ChatBot />} />
+          </Routes>
+
+          <SignedIn>
+            <UserButton />
+            <Link to="/chatbot">
+              <button>Go to ChatBot</button>
+            </Link>
+          </SignedIn>
+
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+        </header>
+      </Router>
+    </ClerkProvider>
+
   );
 }
+

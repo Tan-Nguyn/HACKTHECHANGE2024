@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../App.css";
+import profileIcon from "../assets/profile.svg"; // Use profile.svg as default avatar
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -15,13 +15,25 @@ export default function ProfilePage() {
     vaccinationStatus: "",
     spayedNeutered: "",
   });
-
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
+  // Load profile data from localStorage on component mount
+  useEffect(() => {
+    const savedProfileData = JSON.parse(localStorage.getItem("userProfile"));
+    if (savedProfileData) {
+      setProfileData(savedProfileData);
+    }
+  }, []);
+
+  // Update completion percentage based on filled fields
   useEffect(() => {
     const totalFields = Object.keys(profileData).length - 1;
     const filledFields = Object.values(profileData).filter(Boolean).length;
-    setCompletionPercentage(Math.round((filledFields / totalFields) * 100));
+    const percentage = Math.min(
+      Math.round((filledFields / totalFields) * 100),
+      100
+    );
+    setCompletionPercentage(percentage);
   }, [profileData]);
 
   const handleEdit = () => {
@@ -31,8 +43,6 @@ export default function ProfilePage() {
   const handleSave = (newData) => {
     setProfileData(newData);
     setIsEditing(false);
-
-    // Save to localStorage instead of downloading
     localStorage.setItem("userProfile", JSON.stringify(newData));
   };
 
@@ -41,34 +51,41 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="profile-page">
-      <div className="avatar-section">
-        <div className="avatar-container">
-          <div
-            className="avatar"
-            style={{
-              backgroundImage: `url(${
-                profileData.avatar || "default-avatar.png"
-              })`,
-            }}
-          ></div>
+    <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-lg mt-10">
+      <div className="flex items-center space-x-4 mb-4">
+        <div className="w-16 h-16 rounded-full border-4 border-yellow-500 overflow-hidden">
+          <img
+            src={profileData.avatar || profileIcon} // Use profile.svg as default avatar
+            alt="Cat Avatar"
+            className="w-full h-full object-cover"
+          />
         </div>
-        <div className="basic-info">
-          <h2>{profileData.name || "Unnamed"}</h2>
-          <p>{profileData.breed || "Breed not specified"}</p>
+        <div>
+          <h2 className="text-xl font-bold">{profileData.name || "Unnamed"}</h2>
+          <p className="text-gray-600">
+            {profileData.breed || "Breed not specified"}
+          </p>
         </div>
       </div>
 
-      <div className="progress-bar">
-        <div className="progress" style={{ width: `${completionPercentage}%` }}>
-          {completionPercentage}%{" "}
-          {completionPercentage === 100 ? "Complete" : ""}
+      <div className="mb-4">
+        <div className="text-sm font-semibold text-gray-600">
+          Profile Completion
         </div>
+        <div className="relative w-full h-4 bg-gray-300 rounded-full mt-1">
+          <div
+            className="absolute h-full bg-yellow-500 rounded-full"
+            style={{ width: `${completionPercentage}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-600 mt-1">
+          {completionPercentage}% Complete
+        </p>
       </div>
 
       {!isEditing ? (
-        <div className="profile-info">
-          <div className="info-column">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
             {profileData.age && (
               <p>
                 <strong>Age:</strong> {profileData.age}
@@ -85,7 +102,7 @@ export default function ProfilePage() {
               </p>
             )}
           </div>
-          <div className="info-column">
+          <div>
             {profileData.dietaryNeeds && (
               <p>
                 <strong>Dietary Needs:</strong> {profileData.dietaryNeeds}
@@ -109,7 +126,12 @@ export default function ProfilePage() {
               </p>
             )}
           </div>
-          <button onClick={handleEdit}>Edit Profile</button>
+          <button
+            onClick={handleEdit}
+            className="col-span-2 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 mt-4"
+          >
+            Edit Profile
+          </button>
         </div>
       ) : (
         <EditForm
@@ -147,98 +169,141 @@ function EditForm({ profileData, onSave, onCancel }) {
   };
 
   return (
-    <div className="edit-form">
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Avatar</label>
-        <input type="file" accept="image/*" onChange={handleAvatarChange} />
-
-        <label>Name</label>
+    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Avatar
+        </label>
+        <input
+          type="file"
+          className="mt-1 w-full"
+          onChange={handleAvatarChange}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Name</label>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
           required
         />
-
-        <label>Breed</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Breed</label>
         <input
           type="text"
           name="breed"
           value={formData.breed}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
           required
         />
-
-        <label>Age</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Age</label>
         <input
           type="number"
           name="age"
           value={formData.age}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         />
-
-        <label>Weight</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Weight
+        </label>
         <input
           type="number"
           name="weight"
           value={formData.weight}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         />
-
-        <label>Size</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Size</label>
         <input
           type="text"
           name="size"
           value={formData.size}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         />
-
-        <label>Dietary Needs</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Dietary Needs
+        </label>
         <input
           type="text"
           name="dietaryNeeds"
           value={formData.dietaryNeeds}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         />
-
-        <label>Medical Conditions</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Medical Conditions
+        </label>
         <input
           type="text"
           name="medicalConditions"
           value={formData.medicalConditions}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         />
-
-        <label>Vaccination Status</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Vaccination Status
+        </label>
         <select
           name="vaccinationStatus"
           value={formData.vaccinationStatus}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         >
           <option value="">Select status</option>
           <option value="Up-to-date">Up-to-date</option>
           <option value="Due Soon">Due Soon</option>
           <option value="Overdue">Overdue</option>
         </select>
-
-        <label>Spayed/Neutered</label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Spayed/Neutered
+        </label>
         <select
           name="spayedNeutered"
           value={formData.spayedNeutered}
           onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-lg"
         >
           <option value="">Select option</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-
-        <button type="submit">Save</button>
-        <button type="button" onClick={onCancel}>
+      </div>
+      <div className="flex space-x-4">
+        <button
+          type="submit"
+          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400"
+        >
           Cancel
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }

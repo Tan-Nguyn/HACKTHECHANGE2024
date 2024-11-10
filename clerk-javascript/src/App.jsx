@@ -1,11 +1,14 @@
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton, UserButton, ClerkProvider } from '@clerk/clerk-react';
-import ChatBot from './pages/ChatBot';
+import {
+  BrowserRouter as BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
+import Header from "./components/Header";
+import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 
 export default function App() {
-
-
   // Import your publishable key
   const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -14,28 +17,14 @@ export default function App() {
   }
 
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <Router>
-        <header>
-          <Routes>
-            <Route path='/' element={<div>Home</div>} />
-            <Route path='/chatbot' element={<ChatBot />} />
-          </Routes>
-
-          <SignedIn>
-            <UserButton />
-            <Link to="/chatbot">
-              <button>Go to ChatBot</button>
-            </Link>
-          </SignedIn>
-
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-        </header>
-      </Router>
-    </ClerkProvider>
-
+    <>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
-

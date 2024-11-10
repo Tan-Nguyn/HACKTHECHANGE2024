@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import axios from 'axios';
 
 // Style components using Tailwind CSS
 import "./ChatBotStyle.css";
@@ -11,11 +10,10 @@ const App = () => {
     const [userInput, setUserInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const PUBLISHABLE_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-    const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY;
+    const PUBLISHABLE_KEY = import.meta.env.GEMINI_API_KEY
 
-    // Initialize Gemini AI API
-    const genAI = new GoogleGenerativeAI({ apiKey: PUBLISHABLE_KEY });
+    // Initialize Gemini API
+    const genAI = new GoogleGenerativeAI({ PUBLISHABLE_KEY });
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Function to handle user input
@@ -23,76 +21,33 @@ const App = () => {
         setUserInput(e.target.value);
     };
 
-    // Function to fetch cat breed information from The Cat API
-    const fetchCatInfo = async (breedName) => {
-        try {
-            const response = await axios.get('https://api.thecatapi.com/v1/breeds/search', {
-                headers: { 'x-api-key': CAT_API_KEY },
-                params: { q: breedName },
-            });
-
-            if (response.data.length === 0) return null;
-
-            const breed = response.data[0];
-            const imageResponse = await axios.get('https://api.thecatapi.com/v1/images/search', {
-                headers: { 'x-api-key': CAT_API_KEY },
-                params: { breed_id: breed.id, limit: 1 },
-            });
-
-            return {
-                name: breed.name,
-                description: breed.description,
-                temperament: breed.temperament,
-                origin: breed.origin,
-                imageUrl: imageResponse.data[0]?.url || '',
-            };
-        } catch (error) {
-            console.error("Error fetching cat information:", error);
-            return null;
-        }
-    };
-
-    // Function to send user message to Gemini or fetch cat info if applicable
+    // Function to send user message to Gemini
     const sendMessage = async () => {
         if (userInput.trim() === "") return;
 
         setIsLoading(true);
-        setChatHistory([...chatHistory, { type: "user", message: userInput }]);
-
         try {
-            const catInfo = await fetchCatInfo(userInput);
-            let prompt = `
-                You are a virtual veterinarian for HowToMeow, a service for assisting pet owners. 
-                Answer questions with a neutral and supportive tone, providing straightforward and helpful insights about cats.
+            // Constructing a prompt to personalize AI responses
+            const prompt = `
+                You are a friendly and knowledgeable chatbot named Gemini. 
+                You assist users by answering questions, providing insights, and engaging in conversation. 
+                Respond with clear and concise information in a supportive and engaging tone.
+
+                User: ${userInput}
             `;
 
-            if (catInfo) {
-                prompt += `
-                    The user asked about ${catInfo.name}, a breed known for its ${catInfo.temperament} temperament. 
-                    This breed originates from ${catInfo.origin}. Here is some more information: 
-                    ${catInfo.description}
-                    ${catInfo.imageUrl ? `Here is an image of this breed: ${catInfo.imageUrl}` : ''}
-                `;
-            }
-
-            prompt += `
-                User's question: ${userInput}
-            `;
-
-            // Call Gemini API with proper formatting and handle response
+            // Call Gemini API to get a response
             const result = await model.generateContent({ prompt });
-            const responseText = await result.response.text();
+            const response = await result.response;
 
-            setChatHistory(prev => [
-                ...prev,
-                { type: "bot", message: responseText },
+            // Add Gemini's response to the chat history
+            setChatHistory([
+                ...chatHistory,
+                { type: "user", message: userInput },
+                { type: "bot", message: response.text() },
             ]);
         } catch (error) {
-            console.error("Error sending message:", error);
-            setChatHistory(prev => [
-                ...prev,
-                { type: "bot", message: "Sorry, I'm having trouble responding right now." },
-            ]);
+            console.error("Error sending message", error);
         } finally {
             setUserInput("");
             setIsLoading(false);

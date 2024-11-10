@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Style components using Tailwind CSS
 import "./ChatBotStyle.css";
-import ChatHistory from "clerk-javascript/src/components/ChatHistory/index.jsx";
-import Loading from "clerk-javascript/src/components/Loading/index.jsx";
+import ChatHistory from "../components/ChatHistory/index.jsx";
+import Loading from "../components/Loading/index.jsx";
 
 const App = () => {
     const [userInput, setUserInput] = useState("");

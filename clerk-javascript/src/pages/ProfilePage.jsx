@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 
 export default function ProfilePage() {
-  const [avatar, setAvatar] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
+    avatar: null,
     name: "Buddy",
     breed: "Golden Retriever",
-    age: "3",
-    weight: "30",
-    size: "Medium",
-    dietaryNeeds: "Low-fat diet",
-    medicalConditions: "None",
-    vaccinationStatus: "Up-to-date",
-    spayedNeutered: "Yes",
+    age: "",
+    weight: "",
+    size: "",
+    dietaryNeeds: "",
+    medicalConditions: "",
+    vaccinationStatus: "",
+    spayedNeutered: "",
   });
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const [completionPercentage, setCompletionPercentage] = useState(0);
+
+  // Calculate completion percentage
+  useEffect(() => {
+    const totalFields = Object.keys(profileData).length - 1; // Exclude avatar
+    const filledFields = Object.values(profileData).filter(Boolean).length;
+    setCompletionPercentage(Math.round((filledFields / totalFields) * 100));
+  }, [profileData]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -42,53 +40,69 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <div className="avatar-container">
-        <input
-          type="file"
-          id="avatar"
-          style={{ display: "none" }}
-          onChange={handleAvatarChange}
-        />
-        <label htmlFor="avatar">
+      <div className="avatar-section">
+        <div className="avatar-container">
           <div
             className="avatar"
             style={{
-              backgroundImage: `url(${avatar || "default-avatar.png"})`,
+              backgroundImage: `url(${
+                profileData.avatar || "default-avatar.png"
+              })`,
             }}
           ></div>
-        </label>
+        </div>
+        <div className="basic-info">
+          <h2>{profileData.name || "Unnamed"}</h2>
+          <p>{profileData.breed || "Breed not specified"}</p>
+        </div>
+      </div>
+
+      <div className="progress-bar">
+        <div className="progress" style={{ width: `${completionPercentage}%` }}>
+          {completionPercentage}%{" "}
+          {completionPercentage === 100 ? "Complete" : ""}
+        </div>
       </div>
 
       {!isEditing ? (
         <div className="profile-info">
-          <h2>Pet Profile</h2>
-          <p>
-            <strong>Name:</strong> {profileData.name}
-          </p>
-          <p>
-            <strong>Breed:</strong> {profileData.breed}
-          </p>
-          <p>
-            <strong>Age:</strong> {profileData.age}
-          </p>
-          <p>
-            <strong>Weight:</strong> {profileData.weight}
-          </p>
-          <p>
-            <strong>Size:</strong> {profileData.size}
-          </p>
-          <p>
-            <strong>Dietary Needs:</strong> {profileData.dietaryNeeds}
-          </p>
-          <p>
-            <strong>Medical Conditions:</strong> {profileData.medicalConditions}
-          </p>
-          <p>
-            <strong>Vaccination Status:</strong> {profileData.vaccinationStatus}
-          </p>
-          <p>
-            <strong>Spayed/Neutered:</strong> {profileData.spayedNeutered}
-          </p>
+          {profileData.age && (
+            <p>
+              <strong>Age:</strong> {profileData.age}
+            </p>
+          )}
+          {profileData.weight && (
+            <p>
+              <strong>Weight:</strong> {profileData.weight}
+            </p>
+          )}
+          {profileData.size && (
+            <p>
+              <strong>Size:</strong> {profileData.size}
+            </p>
+          )}
+          {profileData.dietaryNeeds && (
+            <p>
+              <strong>Dietary Needs:</strong> {profileData.dietaryNeeds}
+            </p>
+          )}
+          {profileData.medicalConditions && (
+            <p>
+              <strong>Medical Conditions:</strong>{" "}
+              {profileData.medicalConditions}
+            </p>
+          )}
+          {profileData.vaccinationStatus && (
+            <p>
+              <strong>Vaccination Status:</strong>{" "}
+              {profileData.vaccinationStatus}
+            </p>
+          )}
+          {profileData.spayedNeutered && (
+            <p>
+              <strong>Spayed/Neutered:</strong> {profileData.spayedNeutered}
+            </p>
+          )}
           <button onClick={handleEdit}>Edit Profile</button>
         </div>
       ) : (
@@ -110,6 +124,17 @@ function EditForm({ profileData, onSave, onCancel }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, avatar: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     onSave(formData);
@@ -119,6 +144,9 @@ function EditForm({ profileData, onSave, onCancel }) {
     <div className="edit-form">
       <h2>Edit Profile</h2>
       <form onSubmit={handleSubmit}>
+        <label>Avatar</label>
+        <input type="file" accept="image/*" onChange={handleAvatarChange} />
+
         <label>Name</label>
         <input
           type="text"
@@ -143,7 +171,6 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="age"
           value={formData.age}
           onChange={handleChange}
-          required
         />
 
         <label>Weight</label>
@@ -152,7 +179,6 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="weight"
           value={formData.weight}
           onChange={handleChange}
-          required
         />
 
         <label>Size</label>
@@ -161,7 +187,6 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="size"
           value={formData.size}
           onChange={handleChange}
-          required
         />
 
         <label>Dietary Needs</label>
@@ -170,7 +195,6 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="dietaryNeeds"
           value={formData.dietaryNeeds}
           onChange={handleChange}
-          required
         />
 
         <label>Medical Conditions</label>
@@ -179,7 +203,6 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="medicalConditions"
           value={formData.medicalConditions}
           onChange={handleChange}
-          required
         />
 
         <label>Vaccination Status</label>
@@ -187,8 +210,8 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="vaccinationStatus"
           value={formData.vaccinationStatus}
           onChange={handleChange}
-          required
         >
+          <option value="">Select status</option>
           <option value="Up-to-date">Up-to-date</option>
           <option value="Due Soon">Due Soon</option>
           <option value="Overdue">Overdue</option>
@@ -199,8 +222,8 @@ function EditForm({ profileData, onSave, onCancel }) {
           name="spayedNeutered"
           value={formData.spayedNeutered}
           onChange={handleChange}
-          required
         >
+          <option value="">Select option</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>

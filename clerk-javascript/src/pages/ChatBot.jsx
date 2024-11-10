@@ -10,10 +10,11 @@ const App = () => {
     const [userInput, setUserInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const PUBLISHABLE_KEY = import.meta.env.GEMINI_API_KEY;
 
     // inislize your Gemeni Api
     const genAI = new GoogleGenerativeAI(
-        "AIzaSyCB_0-U54SRgTVercakMa6pYeTrkgLemWc"
+        { PUBLISHABLE_KEY }
     );
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -27,9 +28,13 @@ const App = () => {
         if (userInput.trim() === "") return;
 
         setIsLoading(true);
+
         try {
+            // prompt to train AI
+            const prompt =
+                'You are a cat expert for HowToMeow company. HowToMeow is a company where provides service pet to non-accessbility home, where the pets can help the in-need people with daily tasks or just to be a friend with. Your main job is be a vet, where you provide answers and insights to user questiona about their cat. Your tone need to be neutral and supportive, provide straight forward and helpful answers. ${ userinput } ';
             // call Gemini Api to get a response
-            const result = await model.generateContent(userInput);
+            const result = await model.generateContent(prompt);
             const response = await result.response;
             console.log(response);
             // add Gemeni's response to the chat history

@@ -5,8 +5,8 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     avatar: null,
-    name: "Buddy",
-    breed: "Golden Retriever",
+    name: "Mochi",
+    breed: "England Short hair",
     age: "",
     weight: "",
     size: "",

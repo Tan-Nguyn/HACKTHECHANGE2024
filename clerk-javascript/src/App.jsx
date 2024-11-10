@@ -9,6 +9,15 @@ import {
 import ChatBot from "./pages/ChatBot";
 import ProfilePage from "./pages/ProfilePage";
 import DailyWork from "./pages/DailyWork";
+import {
+  BrowserRouter as BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+
+import Header from "./components/Header";
+import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 
 export default function App() {
   // Import your publishable key
